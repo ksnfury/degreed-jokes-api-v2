@@ -19,7 +19,7 @@ public class JokeHelper
 
             foreach (var kvp in properties)
             {
-                var joke = new Joke { Id = int.Parse(kvp.Key), Text = kvp.Value, Length = kvp.Value.Length };
+                var joke = new Joke { Id = kvp.Key, Text = kvp.Value, Length = kvp.Value.Length };
                 fallbackJokes.Add(joke);
             }
         }
