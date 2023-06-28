@@ -13,18 +13,18 @@ using System.IdentityModel.Tokens.Jwt;
 [ApiVersion("2.0")]
 public class JokeApiV2Controller : ControllerBase
 {
-    private readonly IJokeService _jokeService;
+    private readonly IExternalJokeService _externalJokeService;
 
-    public JokeApiV2Controller(IJokeService jokeService)
+    public JokeApiV2Controller(IExternalJokeService externalJokeService)
     {
-        _jokeService = jokeService;
+        _externalJokeService = externalJokeService;
     }
 
     [HttpGet("random")]
     [AllowAnonymous]
-    public ActionResult<JokeDto> GetRandomJoke()
+    public async Task<ActionResult<JokeDto>> GetRandomJoke()
     {
-        var joke = _jokeService.GetRandomJoke();
+        var joke = await _externalJokeService.GetRandomJoke();
         if (joke == null)
             return NotFound();
 
@@ -34,7 +34,7 @@ public class JokeApiV2Controller : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public ActionResult<Dictionary<JokeLengthCategory, List<JokeDto>>> SearchJokes([FromQuery] string searchTerm)
+    public async Task<ActionResult<Dictionary<JokeLengthCategory, List<JokeDto>>>> SearchJokes([FromQuery] string searchTerm)
     {
 
         if (string.IsNullOrWhiteSpace(searchTerm))
@@ -42,7 +42,7 @@ public class JokeApiV2Controller : ControllerBase
             return BadRequest("Search term cannot be empty");
         }
 
-        var jokes = _jokeService.SearchJokes(searchTerm);
+        var jokes = await _externalJokeService.SearchJokes(searchTerm);
 
         if (jokes == null || jokes.Count == 0)
         {
