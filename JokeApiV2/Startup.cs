@@ -98,6 +98,9 @@ namespace JokeApiV2
             // Register your custom services
 
             services.AddScoped<IJokeService, JokeService>();
+
+            services.AddHttpClient();
+            services.AddScoped<IExternalJokeService, ExternalJokeService>();
             services.AddScoped<IHighlightingDecorator, EmphasisHighlightingDecorator>();
 
             services.AddSingleton<ILogger<LRUJokeCache>, Logger<LRUJokeCache>>();
